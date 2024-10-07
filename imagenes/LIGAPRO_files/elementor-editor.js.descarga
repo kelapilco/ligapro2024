@@ -1,0 +1,12 @@
+(function ($) {
+    'use strict'
+
+    $(window).on('elementor/frontend/init',function () {
+        if (elementorFrontend) {
+            elementorFrontend.hooks.addAction('frontend/element_ready/widget', function ($scope) {
+                $scope.jblog_slider()
+                $scope.jblog_block()
+            })
+        }
+    })
+})(jQuery);

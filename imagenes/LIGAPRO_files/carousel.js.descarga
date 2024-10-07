@@ -1,0 +1,153 @@
+// Obtener el elemento del carrusel
+const carousel = document.getElementById('carousel');
+
+// Obtener la fecha actual
+const today = new Date();
+
+// Realizar una solicitud AJAX para obtener los datos de los partidos
+fetch('/informacion/fixtures/dataPartidos.php')
+    .then(response => response.json())
+    .then(data => {
+        console.log('Datos recibidos:', data);
+        const fechas = data.result;
+        let partidosCercanos = [];
+
+        // Ordenar los partidos globalmente por fecha y hora, sin separar por fecha
+        const todosLosPartidos = [];
+
+        fechas.forEach(fecha => {
+            fecha.partidos.forEach(partido => {
+                const partidoDate = new Date(`${partido.fechaPartido} ${partido.horaPartido}`);
+                if (partido.estadoComet === 'Played' || partido.estadoComet === 'Fixture') {
+                    todosLosPartidos.push({
+                        ...partido,
+                        partidoDate
+                    });
+                }
+            });
+        });
+
+        // Ordenar todos los partidos por fecha
+        todosLosPartidos.sort((a, b) => a.partidoDate - b.partidoDate);
+
+        // Crear las slides
+        todosLosPartidos.forEach(partido => {
+            if (
+                partido.fechaPartido &&
+                partido.horaPartido &&
+                partido.clubLocal &&
+                partido.clubLocal.logoLocal &&
+                partido.clubVisitante &&
+                partido.clubVisitante.logoVisitante &&
+                partido.estadio &&
+                partido.estadio.estadio
+            ) {
+                // Crear un nuevo slide para cada partido
+                const slide = document.createElement('div');
+                slide.classList.add('slide');
+
+                // Agregar la fecha y hora
+                const fechaHora = document.createElement('div');
+                fechaHora.classList.add('fechahora');
+                fechaHora.textContent = `${partido.fechaPartido} - ${partido.horaPartido}`;
+                slide.appendChild(fechaHora);
+
+                // Contenedor para los logos y cuadros blancos
+                const logosContainer = document.createElement('div');
+                logosContainer.classList.add('logos-container');
+
+                // Agregar el logo del local
+                const logoLocal = document.createElement('img');
+                logoLocal.src = partido.clubLocal.logoLocal.replace(/\\/g, ''); // Eliminar las barras invertidas
+                logoLocal.classList.add('logos-equipos');
+                logosContainer.appendChild(logoLocal);
+
+                // Agregar cuadro blanco para separación
+                const cuadroBlancoLocal = document.createElement('div');
+                cuadroBlancoLocal.classList.add('cuadro-blanco');
+                logosContainer.appendChild(cuadroBlancoLocal);
+
+                // Agregar texto al cuadro blanco
+                const resultadoLocal = document.createElement('p');
+                resultadoLocal.textContent = partido.clubLocal.scoreLocal; // Aquí puedes agregar el texto que desees
+                resultadoLocal.classList.add('resultado');
+                cuadroBlancoLocal.appendChild(resultadoLocal);
+
+                // Agregar cuadro blanco para separación
+                const cuadroBlancoVisitante = document.createElement('div');
+                cuadroBlancoVisitante.classList.add('cuadro-blanco');
+                logosContainer.appendChild(cuadroBlancoVisitante);
+
+                // Agregar texto al cuadro blanco
+                const resultadoVisitante = document.createElement('p');
+                resultadoVisitante.textContent = partido.clubVisitante.scoreVisitante; // Aquí puedes agregar el texto que desees
+                resultadoVisitante.classList.add('resultado');
+                cuadroBlancoVisitante.appendChild(resultadoVisitante);
+
+                // Agregar el logo del visitante
+                const logoVisitante = document.createElement('img');
+                logoVisitante.src = partido.clubVisitante.logoVisitante.replace(/\\/g, ''); // Eliminar las barras invertidas
+                logoVisitante.classList.add('logos-equipos');
+                logosContainer.appendChild(logoVisitante);
+
+                slide.appendChild(logosContainer);
+
+                 // Si el partido está en estado "Played", agregar un enlace en la parte inferior
+            if (partido.estadoComet === 'Played') {
+                const enlace = document.createElement('a');
+                enlace.href = `https://ligapro.ec/pagina-del-partido/?match=${partido.idPartido}`; // Ajusta la URL según tu estructura
+                enlace.textContent = 'PÁGINA DEL PARTIDO';
+                enlace.classList.add('enlace-detalles');
+                slide.appendChild(enlace); // Agregar el enlace al slide
+            }
+
+            if (partido.estadoComet === 'Fixture') {
+                const enlace = document.createElement('a');
+                enlace.href = ``; // Ajusta la URL según tu estructura
+                enlace.textContent = 'PROGRAMADO';
+                enlace.classList.add('enlace-detalles-fixture');
+                slide.appendChild(enlace); // Agregar el enlace al slide
+            }
+
+                // Agregar el slide al carrusel
+                carousel.appendChild(slide);
+
+                // Agregar el partido a la lista de partidos cercanos
+                partidosCercanos.push({
+                    element: slide,
+                    date: partido.partidoDate
+                });
+            } else {
+                console.error('Los datos del partido no tienen la estructura esperada:', partido);
+            }
+        });
+
+        // Encontrar el partido más cercano a la fecha actual
+        let partidoMasCercano = partidosCercanos.reduce((a, b) => {
+            return Math.abs(b.date - today) < Math.abs(a.date - today) ? b : a;
+        });
+
+        /// Desplazar el carrusel para poner el partido más cercano a la izquierda
+const scrollToPosition = partidoMasCercano.element.offsetLeft;
+carousel.scrollTo({
+    top: 0,
+    left: scrollToPosition,
+    behavior: 'smooth' // Para hacer el scroll suave
+});
+
+    })
+    .catch(error => console.error('Error al obtener los datos de los partidos:', error));
+
+// Función para desplazar el carrusel manualmente
+function scrollCarousel(direction) {
+    const scrollAmount = 300; // Ajusta esta cantidad según sea necesario
+    carousel.scrollBy({
+        top: 0,
+        left: direction === 'next' ? scrollAmount : -scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+// Event listeners para la navegación
+document.getElementById('prevBtn').addEventListener('click', () => scrollCarousel('prev'));
+document.getElementById('nextBtn').addEventListener('click', () => scrollCarousel('next'));

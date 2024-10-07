@@ -1,0 +1,158 @@
+.carousel-container {
+    position: relative;
+    width: 100%;
+}
+
+.carousel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #005cff;
+    padding-left: 65px;
+    padding-right: 100px;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    width:97%;
+}
+
+@media only screen and (max-width: 450px)
+{
+    
+    .carousel {
+        padding-left:15px !important;
+        
+    }
+    
+    .fechahora {
+    font-size: 12px;
+    font-family: 'Arvo';
+    width: 125px;
+    padding: 0px 0px 5px 0px;
+    color: #fff;
+    margin: 0 auto;
+    position: relative;
+    left: 25px;
+}
+        
+    
+}
+
+
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 70px;
+    text-align:center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.slide p{
+    font-size: 7px;
+    font-family: 'Arvo';
+    color: #fff;
+}
+
+.fecha-hora {
+    margin-bottom: 10px;
+}
+
+.logos-container {
+    display: flex;
+    align-items: center;
+    width:100px;
+}
+
+.logo-local,
+.logo-visitante {
+    width: 35px; /* Ajusta el ancho según sea necesario */
+    height: auto; /* Ajusta la altura según sea necesario */
+}
+
+.logos-equipos{
+    width: auto;
+    height: 35px !important;
+
+}
+
+.resultado {
+    font-size: 1rem; /* Ajusta el tamaño de la fuente según sea necesario */
+    color: #000; /* Color del texto */
+    margin: 0; /* Eliminar margen por defecto */
+}
+
+.cuadro-blanco {
+    width: 20px !important; /* Ajusta el ancho según sea necesario */
+    height: 20px !important; /* Ajusta la altura según sea necesario */
+    background-color: #fff; /* Color del cuadro blanco */
+    margin: 0 10px; /* Ajusta el margen entre los cuadros blancos */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cuadro-blanco p.resultado{
+    font-size: 15px;
+    font-family: 'Arvo';
+    color: #005cff;
+    font-weight: 700;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.estadio {
+    margin-top: 10px;
+}
+
+.enlace-detalles{
+    color: #fff;
+    font-size: 8px;
+    font-family: 'Arvo';
+    margin-left: 50%;
+    text-decoration: none;
+    width: 100%;
+    padding: 5px;
+}
+
+.enlace-detalles-fixture{
+    color: transparent !important;
+}
+
+/* Flechas de navegación */
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    z-index: 1;
+}
+
+.left-arrow {
+    left: 10px;
+}
+
+.right-arrow {
+    right: 10px;
+}
+
+.fechahora{
+    font-size: 10px;
+    font-family: 'Arvo';
+    width: 110px;
+    padding: 0px 0px 5px 0px;
+    color: #fff;
+    margin: 0 auto;
+    position:relative;
+    left: 25px;
+}
+
+
